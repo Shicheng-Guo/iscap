@@ -102,6 +102,7 @@ void	document(void) {
 }
 
 int	main(int	ac,	char	**av){
+	cerr<<"iscap	Wang Yi @ Fudan Univerisity\n";
 	size_t	t0=time(NULL);
 	Capture	c;	c.hash_len=16;	c.hash_hit=16;
 	int	opt;
