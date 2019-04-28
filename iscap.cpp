@@ -12,7 +12,6 @@ class	Capture{
 private:
 	vector<bool>	bloom;
 	vector<string>	fasta;
-	uint64_t	rotl(const	uint64_t	x,	int	k){	return (x << k) | (x >> (64 - k));  }
 	inline	unsigned	hits(char	*S);
 public:
 	uint64_t	hash_len,	hash_hit;
@@ -25,7 +24,7 @@ unsigned	Capture::hits(char	*S){
 	unsigned	len=strlen(S)-1,	h=0;
 	for(unsigned	j=0;	j+hash_len<=len;	j++){
 		uint64_t	k=wyhash(S+j,	hash_len,	0);
-		if(bloom[k&0xffffffff]&&bloom[k>>32]&&bloom[rotl(k,16)&0xffffffff])	h++;
+		if(bloom[k&0xffffffff]&&bloom[k>>32])	h++;
 	}	
 	return	h;
 }
@@ -53,13 +52,13 @@ void	Capture::fasta2keys(void){
 		for(size_t	j=0;	j<s.size();	j++)	s[j]=fwd[(unsigned char)s[j]];
 		for(size_t	j=0;	j+hash_len<=s.size();	j++){
 			uint64_t	k=wyhash(s.c_str()+j,	hash_len,	0);	if(k==hashn)	continue;
-			bloom[k&0xffffffff]=1;	bloom[k>>32]=1;	bloom[rotl(k,16)&0xffffffff]=1;
+			bloom[k&0xffffffff]=1;	bloom[k>>32]=1;
 		}	
 		reverse(s.begin(),	s.end());
 		for(size_t	j=0;	j<s.size();	j++)	s[j]=rev[(unsigned char)s[j]];
 		for(size_t	j=0;	j+hash_len<=s.size();	j++){
 			uint64_t	k=wyhash(s.c_str()+j,	hash_len,	0);	if(k==hashn)	continue;
-			bloom[k&0xffffffff]=1;	bloom[k>>32]=1;	bloom[rotl(k,16)&0xffffffff]=1;
+			bloom[k&0xffffffff]=1;	bloom[k>>32]=1;
 		}
 	}
 	vector<string>().swap(fasta);
